@@ -1,0 +1,23 @@
+========================================================== DEPENDENCIAS UTILIZADAS ==========================================================
+
+° Windows.
+
+° VSC.
+
+° HTML.
+
+° CSS.
+
+° Bootstrap.
+
+° Javascript.
+
+° Servidor Web XAMPP.
+
+° MySQL.
+
+° React.
+
+° Node JS.
+
+° NPM.
