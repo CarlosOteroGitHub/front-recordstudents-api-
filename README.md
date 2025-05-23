@@ -1,3 +1,7 @@
+Proyecto Backend de la App de para Registro de Estudiantes a Sesiones de Estudio. Carlos Otero Ramírez para ICE México.
+
+Comando de ejecución: set NODE_OPTIONS=--openssl-legacy-provider && npm run start
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
