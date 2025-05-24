@@ -6,36 +6,53 @@ class Crear extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            nombre: "",
             fecha: "",
             estudiante: "",
             sesion: "",
+            estudiantes: [],
+            sesiones: []
         }
     }
 
     cambioValor = (e) => {
-        const state = this.state;
-        state[e.target.name] = e.target.value;
-        this.setState({ state });
+        this.setState({ [e.target.name]: e.target.value });
     }
 
-    //Función que inserta un registro del modelo asistencias en la base de datos MySQL.
+    //Función que inserta un registro del modelo asistencias.
     enviarDatos = (e) => {
         e.preventDefault();
-        const { nombre, fecha, estudiante, sesion } = this.state;
+        const { fecha, estudiante, sesion } = this.state;
 
-        var datosEnviar = { nombre: nombre, fecha: fecha, estudiante: estudiante, sesion: sesion };
+        var datosEnviar = {
+            estudiante_id: estudiante,
+            sesion_id: sesion,
+            fechahora: fecha
+        };
 
-        fetch(Api + "?insertar=1", {
+        fetch(Api + "/asistencias", {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(datosEnviar)
         })
             .then(respuesta => respuesta.json())
             .then((datosRespuesta) => {
                 console.log(datosRespuesta);
-                this.props.history.push("/");
+                this.props.history.push("/asistencias");
             })
             .catch(console.log)
+    }
+
+    //Función que se invoca inmediatamente, la cual ejecuta las peticiones para obtener datos de estudiantes y sesiones.
+    componentDidMount() {
+        fetch(Api + "/estudiantes")
+            .then(res => res.json())
+            .then(data => this.setState({ estudiantes: data }));
+
+        fetch(Api + "/sesiones")
+            .then(res => res.json())
+            .then(data => this.setState({ sesiones: data }));
     }
 
     //Proceso que muestra código en formato JSX para la visualización gráfica del formulario de inserción en el navegador web.
@@ -44,33 +61,46 @@ class Crear extends React.Component {
         return (
             <div className="card">
                 <div className="card-header">
-                    <h4>Agregar Sesión</h4>
+                    <h4>Agregar Asistencia</h4>
                 </div>
                 <div className="card-body">
                     <form onSubmit={this.enviarDatos}>
                         <div className="form-group">
-                            <label htmlFor="nombre">Nombre*</label>
-                            <input type="text" name="nombre" id="nombre" onChange={this.cambioValor} value={nombre} className="form-control" aria-describedby="helpId" />
-                            <br></br>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="fecha">Fecha/Hora*</label>
+                            <strong><label htmlFor="fecha">Fecha y Hora*</label></strong>
                             <input type="datetime-local" name="fecha" id="fecha" value={fecha} onChange={this.cambioValor} className="form-control" aria-describedby="helpId" />
                             <br></br>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="estudiante">Estudiante*</label>
-                            <input type="text" name="estudiante" id="estudiante" value={estudiante} onChange={this.cambioValor} className="form-control" aria-describedby="helpId" />
-                            <br></br>
+                            <strong><label htmlFor="estudiante">Nombre del Estudiante*</label></strong>
+                            <select
+                                name="estudiante"
+                                value={estudiante}
+                                onChange={this.cambioValor}
+                                className="form-control"
+                            >
+                                {this.state.estudiantes.map(est => (
+                                    <option key={est.id} value={est.id}>{est.nombre}</option>
+                                ))}
+                            </select>
+                            <br />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sesion">Sesión*</label>
-                            <input type="text" name="sesion" id="sesion" value={sesion} onChange={this.cambioValor} className="form-control" aria-describedby="helpId" />
-                            <br></br>
+                            <strong><label htmlFor="sesion">Nombre de la Sesion*</label></strong>
+                            <select
+                                name="sesion"
+                                value={sesion}
+                                onChange={this.cambioValor}
+                                className="form-control"
+                            >
+                                {this.state.sesiones.map(est => (
+                                    <option key={est.id} value={est.id}>{est.nombre}</option>
+                                ))}
+                            </select>
+                            <br />
                         </div>
                         <div className="btn-group" role="group" aria-label="">
                             <button type="submit" className="btn btn-info">Agregar</button>
-                            <Link to={"/sesiones"} className="btn btn-danger">Cancelar</Link>
+                            <Link to={"/asistencias"} className="btn btn-danger">Cancelar</Link>
                         </div>
                     </form>
                 </div>

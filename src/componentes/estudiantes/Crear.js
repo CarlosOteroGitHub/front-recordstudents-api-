@@ -8,30 +8,32 @@ class Crear extends React.Component {
     this.state = {
       nombre: "",
       nacimiento: "",
+      correo: "",
     }
   }
 
   cambioValor = (e) => {
-    const state = this.state;
-    state[e.target.name] = e.target.value;
-    this.setState({ state });
+    this.setState({ [e.target.name]: e.target.value });
   }
 
-  //Función que inserta un registro del modelo estudiantes en la base de datos MySQL.
+  //Función que inserta un registro del modelo estudiantes.
   enviarDatos = (e) => {
     e.preventDefault();
     const { nombre, nacimiento, correo } = this.state;
 
     var datosEnviar = { nombre: nombre, nacimiento: nacimiento, correo: correo };
 
-    fetch(Api + "?insertar=1", {
+    fetch(Api + "/estudiantes", {
       method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(datosEnviar)
     })
       .then(respuesta => respuesta.json())
       .then((datosRespuesta) => {
         console.log(datosRespuesta);
-        this.props.history.push("/");
+        this.props.history.push("/estudiantes");
       })
       .catch(console.log)
   }
@@ -47,17 +49,17 @@ class Crear extends React.Component {
         <div className="card-body">
           <form onSubmit={this.enviarDatos}>
             <div className="form-group">
-              <label htmlFor="nombre">Nombre*</label>
+              <strong><label htmlFor="nombre">Nombre*</label></strong>
               <input type="text" name="nombre" id="nombre" onChange={this.cambioValor} value={nombre} className="form-control" aria-describedby="helpId" />
               <br></br>
             </div>
             <div className="form-group">
-              <label htmlFor="nacimiento">Nacimiento*</label>
+              <strong><label htmlFor="nacimiento">Nacimiento*</label></strong>
               <input type="date" name="nacimiento" id="nacimiento" value={nacimiento} onChange={this.cambioValor} className="form-control" aria-describedby="helpId" />
               <br></br>
             </div>
             <div className="form-group">
-              <label htmlFor="correo">Correo Electrónico*</label>
+              <strong><label htmlFor="correo">Correo Electrónico*</label></strong>
               <input type="email" name="correo" id="correo" value={correo} onChange={this.cambioValor} className="form-control" aria-describedby="helpId" />
               <br></br>
             </div>

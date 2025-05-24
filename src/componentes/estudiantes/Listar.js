@@ -11,9 +11,9 @@ class Listar extends React.Component {
         }
     }
 
-    //Función que consulta todos los registros del modelo estudiantes en la base de datos MySQL.
+    //Función que consulta todos los registros del modelo de estudiantes.
     cargarDatos() {
-        fetch(Api)
+        fetch(Api + "/estudiantes")
             .then(respuesta => respuesta.json())
             .then((datosRespuesta) => {
                 this.setState({ datosCargados: true, estudiantes: datosRespuesta })
@@ -28,7 +28,7 @@ class Listar extends React.Component {
 
     //Proceso que muestra código en formato JSX para la visualización gráfica de todos los registros del modelo estudiantes en el navegador web.
     render() {
-        const { datosCargados, estudiantes } = this.state;
+        const { estudiantes } = this.state;
         return (
             <div className="card">
                 <div className="card-header">
@@ -42,8 +42,22 @@ class Listar extends React.Component {
                                 <th>Nombre</th>
                                 <th>Nacimiento</th>
                                 <th>Correo Electrónico</th>
+                                <th>Creado</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {estudiantes.map(
+                                (estudiante) => (
+                                    <tr>
+                                        <td>{estudiante.id}</td>
+                                        <td>{estudiante.nombre}</td>
+                                        <td>{estudiante.nacimiento}</td>
+                                        <td>{estudiante.correo}</td>
+                                        <td>{estudiante.created_at}</td>
+                                    </tr>
+                                )
+                            )}
+                        </tbody>
                     </table>
                     <Link type="button" className="btn btn-success" to={"/estudiantes/crear"}>Agregar Estudiante</Link>
                 </div>
